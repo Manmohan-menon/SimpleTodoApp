@@ -122,7 +122,7 @@ const TodoListScreen = () => {
         />
         <TouchableOpacity onPress={addTodo}>
           <View style={styles.addButton}>
-            <Text style={styles.addButtonText}>{editingIndex !== -1 ? 'Save' : 'Add'}</Text>
+            <Text style={styles.addButtonText}>{editingIndex !== -1 ? 'Update' : 'Add'}</Text>
           </View>
         </TouchableOpacity>
       </View>

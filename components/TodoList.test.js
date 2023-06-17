@@ -38,9 +38,9 @@ describe('TodoList', () => {
     const editButtons = getAllByTestId('edit-todo-button');
     fireEvent.press(editButtons[0]);
   
-    // Check if the Add button is replaced by the Save button
+    // Check if the Add button is replaced by the Update button
     expect(queryByText('Add')).toBeNull();
-    const saveButton = getByText('Save');
+    const saveButton = getByText('Update');
   
     // Update the text input with the new todo content
     const editInputField = getByTestId('edit-todo-input-0');
