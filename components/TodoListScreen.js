@@ -3,7 +3,8 @@ import Constants from 'expo-constants';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const TodoList = () => {
+
+const TodoListScreen = () => {
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState('');
   const [editingIndex, setEditingIndex] = useState(-1);
@@ -11,13 +12,13 @@ const TodoList = () => {
   const addTodo = () => {
     if (input === '') return;
     if (editingIndex !== -1) {
-      // Update existing todo
+      // Updating existing todo
       const updatedTodos = [...todos];
       updatedTodos[editingIndex] = input;
       setTodos(updatedTodos);
       setEditingIndex(-1);
     } else {
-      // Add new todo
+      // Adding new todo
       setTodos([...todos, input]);
     }
     setInput('');
@@ -49,6 +50,8 @@ const TodoList = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+      backgroundColor:'#FFFF',
+      borderRadius: 4,
       marginBottom: 8,
     },
     todoTextContainer: {
@@ -89,7 +92,7 @@ const TodoList = () => {
       <ScrollView>
         {todos.map((todo, index) => (
           <View key={index} style={styles.todoItem}>
-            <TouchableOpacity onPress={() => startEditing(index, todo)}>
+            <TouchableOpacity onPress={() => startEditing(index, todo)} testID="edit-todo-button">
               <MaterialIcons name="edit" size={24} color="black" />
             </TouchableOpacity>
             <View style={styles.todoTextContainer}>
@@ -98,6 +101,7 @@ const TodoList = () => {
                   style={styles.todoText}
                   onChangeText={(text) => setInput(text)}
                   value={input}
+                  testID={`edit-todo-input-${index}`} // Adding unique testID for each input field
                 />
               ) : (
                 <Text style={styles.todoText}>{todo}</Text>
@@ -114,10 +118,11 @@ const TodoList = () => {
           onChangeText={(text) => setInput(text)}
           value={input}
           style={[styles.todoText, { flex: 1 }]}
+          testID="add-todo-input"
         />
         <TouchableOpacity onPress={addTodo}>
           <View style={styles.addButton}>
-            <Text style={styles.addButtonText}>{editingIndex !== -1 ? 'Update' : 'Add'}</Text>
+            <Text style={styles.addButtonText}>{editingIndex !== -1 ? 'Save' : 'Add'}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -125,4 +130,4 @@ const TodoList = () => {
   );
 };
 
-export default TodoList;
+export default TodoListScreen;

@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const TodoList = () => {
+const TodoListOld = () => {
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState('');
   const [selectedTodoIndex, setSelectedTodoIndex] = useState(null);
@@ -116,4 +116,4 @@ const TodoList = () => {
   );
 };
 
-export default TodoList;
+export default TodoListOld;

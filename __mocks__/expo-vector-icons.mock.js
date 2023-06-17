@@ -1,0 +1,1 @@
+export const MaterialIcons = jest.fn().mockImplementation(() => null);

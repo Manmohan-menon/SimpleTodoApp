@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, TextInput, StyleSheet, Platform, Alert, Animated } from 'react-native';
 import Constants from 'expo-constants';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import * as LocalAuthentication from 'expo-local-authentication';
 
-const PinAuth = () => {
+const PinAuth = ({ handleAuthStatusChange }) => {
   const [pin, setPin] = useState('');
   const navigation = useNavigation();
-  const route = useRoute();
-  const { handleAuthStatusChange } = route.params;
   const [authStatus, setAuthStatus] = useState(false);
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
+  useEffect(() => {
+    navigation.setOptions({
+      handleAuthStatusChange: handleAuthStatusChange
+    });
+  }, [navigation]);
   const authenticate = async () => {
     const hasHardware = await LocalAuthentication.hasHardwareAsync();
     const supportedAuthTypes = await LocalAuthentication.supportedAuthenticationTypesAsync();
@@ -27,11 +30,13 @@ const PinAuth = () => {
         Animated.timing(fadeAnim, {
           toValue: 0,
           duration: 500,
-          useNativeDriver: true,
         }).start(() => {
           setAuthStatus(true);
-          handleAuthStatusChange(true); // Update the authentication status in App.js
-          navigation.navigate('TodoList'); // Navigate to the TodoList screen
+          handleAuthStatusChange(true); // Update the auth status in App.js
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'TodoList' }],
+          });
         });
       } else {
         if (Platform.OS === 'android') {
@@ -61,8 +66,8 @@ const PinAuth = () => {
 
           if (enteredPin === result.pin) {
             setAuthStatus(true);
-            handleAuthStatusChange(true); // Update the authentication status in App.js
-            navigation.navigate('TodoList'); // Navigate to the TodoList screen
+            handleAuthStatusChange(true); // Update auth status in App.js
+            navigation.navigate('TodoList'); // Navigate to TodoList screen
           } else {
             alert('Authentication failed');
           }
@@ -122,7 +127,7 @@ const PinAuth = () => {
   return (
     <View style={styles.container}>
       <TextInput keyboardType="numeric" secureTextEntry onChangeText={(text) => setPin(text)} value={pin} />
-      <Button title="Authenticate" onPress={authenticate} />
+      <Button title="Authenticate" onPress={authenticate} testID="auth-button" />
       <Animated.View style={[styles.paragraph, { opacity: fadeAnim }]}>
         {authStatus && <Text>Authenticated</Text>}
       </Animated.View>
