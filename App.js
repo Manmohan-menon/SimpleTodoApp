@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import PinAuth from './components/PinAuth';
-import TodoListScreen from './components/TodoListScreen';
+import TodoList from './components/TodoListScreen';
 
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authStatus, setAuthStatus] = useState(false);
 
   const handleAuthStatusChange = (status) => {
-    setAuthenticated(status);
+    setAuthStatus(status);
   };
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {!authenticated ? (
+        {authStatus ? (
+          <Stack.Screen name="TodoList" component={TodoList} />
+        ) : (
           <Stack.Screen
             name="PinAuth"
-            component={PinAuth}
             options={{ headerShown: false }}
-            initialParams={{ handleAuthStatusChange }}
-          />
-        ) : (
-          <Stack.Screen name="TodoList" component={TodoListScreen} options={{ headerShown: true }} />
+          >
+            {(props) => <PinAuth {...props} handleAuthStatusChange={handleAuthStatusChange} />}
+          </Stack.Screen>
         )}
       </Stack.Navigator>
     </NavigationContainer>
